@@ -22,7 +22,6 @@ const router = createBrowserRouter([
       path: "/funcionario/create",
       element: <Formulario></Formulario>
     },
-    
     {
       path: `/funcionario/${id}`,
       element: <Funcionario></Funcionario>
