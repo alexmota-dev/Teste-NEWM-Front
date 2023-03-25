@@ -1,21 +1,36 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App'
-import {CreateBrowserRoute, RouterProvider, Route, createBrowserRouter} from "react-router-dom";
+import { createBrowserRouter, RouterProvider, Route, Form } from "react-router-dom";
+
+//paginas
+import Home from './routes/Home';
+
 import './index.css'
-const router = createBrowserRouter([{
-  element: <App/>,
+import Formulario from './routes/Formulario';
+import Funcionario from './routes/Funcionario';
+var id = 8;
+const router = createBrowserRouter([
+  {
+  element: <App />,
   children:[
     {
-      path: "/",
+      path: "/funcionario",
+      element: <Home />
     },
     {
-      path: "/new",
-    }
-  ]
+      path: "/funcionario/create",
+      element: <Formulario></Formulario>
+    },
+    
+    {
+      path: `/funcionario/${id}`,
+      element: <Funcionario></Funcionario>
+    },
+  ],
 }])
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <App />
+    <RouterProvider router={router} />
   </React.StrictMode>,
 )
