@@ -15,11 +15,11 @@ const router = createBrowserRouter([
   element: <App />,
   children:[
     {
-      path: "/funcionario",
-      element: <Home />
+      path: "/",
+      element: <Home></Home>
     },
     {
-      path: "/funcionario/create",
+      path: "/cadastro-funcionario",
       element: <Formulario></Formulario>
     },
     {
