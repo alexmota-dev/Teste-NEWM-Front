@@ -5,14 +5,14 @@ const NavBar = () => {
   return (
     <nav className="navbar">
         <h2>
-            <Link to={`/funcionario`}>Blog</Link>
+            <Link to={`/`}>Teste-Newm</Link>
         </h2>
         <ul>
             <li>
-                <Link to={`/funcionario`}>Home</Link>
+                <Link to={`/`}>Home</Link>
             </li>
             <li>
-                <Link to={`/funcionario/create`} className="new-btn">
+                <Link to={`/cadastro-funcionario`} className="new-btn">
                     Criar Funcionario
                 </Link>
             </li>
