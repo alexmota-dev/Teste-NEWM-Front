@@ -11,7 +11,7 @@ const Home = () => {
 
   const getPosts =  async()=>{
     try {
-      const response = await blogFetch.get("/api/v1/funcionario");
+      const response = await blogFetch.get("/funcionario");
 
       const data = response.data;
       setsPosts(data);
@@ -30,7 +30,7 @@ const Home = () => {
         <p>Carregando...</p>
       ) : (
         posts.map((post) => (
-          <div className="post" key={post.id}>
+          <div className="post" key={post.idd}>
             <h2>{post.nome}</h2>
             <p>{post.nascimento}</p>
             <p>{post.celular}</p>
