@@ -5,12 +5,13 @@ import { createBrowserRouter, RouterProvider, Route, Form } from "react-router-d
 
 //paginas
 import Home from './routes/Home';
-
 import './index.css'
 import Formulario from './routes/Formulario';
 import Funcionario from './routes/Funcionario';
-var id = 8;
-const router = createBrowserRouter([
+import FormularioEdicao from './routes/FormularioEdicao';
+
+const id = 8;
+const router= createBrowserRouter([
   {
   element: <App />,
   children:[
@@ -23,8 +24,8 @@ const router = createBrowserRouter([
       element: <Formulario></Formulario>
     },
     {
-      path: `/funcionario/${id}`,
-      element: <Funcionario></Funcionario>
+      path: `/funcionario/:id`,
+      element: <FormularioEdicao/>
     },
   ],
 }])
