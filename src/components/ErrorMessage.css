@@ -1,0 +1,19 @@
+.error-container{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin: 1rem 0px;
+}
+
+.error-container p {
+    color: red;
+}
+
+.error-container button{
+    background: none;
+    outline: none;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
