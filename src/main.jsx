@@ -1,16 +1,14 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App'
-import { createBrowserRouter, RouterProvider, Route, Form } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 //paginas
 import Home from './routes/Home';
 import './index.css'
 import Formulario from './routes/Formulario';
-import Funcionario from './routes/Funcionario';
-import FormularioEdicao from './routes/FormularioEdicao';
+import FormularioUpdate from './routes/FormularioUpdate';
 
-const id = 8;
 const router= createBrowserRouter([
   {
   element: <App />,
@@ -25,7 +23,7 @@ const router= createBrowserRouter([
     },
     {
       path: `/funcionario/:id`,
-      element: <FormularioEdicao/>
+      element: <FormularioUpdate/>
     },
   ],
 }])
