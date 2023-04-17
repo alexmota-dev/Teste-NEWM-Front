@@ -1,13 +1,12 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
+import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import App from './App'
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-
-//paginas
-import Home from './routes/Home';
 import './index.css'
-import Formulario from './routes/Formulario';
-import FormularioUpdate from './routes/FormularioUpdate';
+import Home from './components/Home'
+import Formulario from './components/Formulario'
+import FormularioUpdate from './components/FormularioUpdate'
+import DeletarFuncionario from './components/DeletarFuncionario'
 
 const router= createBrowserRouter([
   {
@@ -25,10 +24,17 @@ const router= createBrowserRouter([
       path: `/funcionario/:id`,
       element: <FormularioUpdate/>
     },
+    {
+      path:`/funcionario-delete/:id`,
+      element: <DeletarFuncionario/>
+    }
   ],
 }])
+
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
+    {/* <BrowserRouter> */}
     <RouterProvider router={router} />
+    {/* </BrowserRouter> */}
   </React.StrictMode>,
 )
