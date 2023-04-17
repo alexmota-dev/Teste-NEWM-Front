@@ -1,55 +1,15 @@
 import React from 'react';
-import "./Formulario.css";
+import "../css/Formulario.css";
 import { useState } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import blogFetch from '../axios/config';
-import axios from 'axios';
-import ErrorMessage from './ErrorMenssage';
-
-const validarCPF = (cpf) => {
-  cpf = cpf.replace(/[^\d]+/g,'');
-
-  if(cpf == '') return false;
-
-  // Elimina CPFs invalidos conhecidos
-  if (cpf.length != 11 || 
-      cpf == "00000000000" || 
-      cpf == "11111111111" || 
-      cpf == "22222222222" || 
-      cpf == "33333333333" || 
-      cpf == "44444444444" || 
-      cpf == "55555555555" || 
-      cpf == "66666666666" || 
-      cpf == "77777777777" || 
-      cpf == "88888888888" || 
-      cpf == "99999999999")
-          return false;
-
-  // Valida 1° digito
-  var add = 0;
-  for (var i=0; i < 9; i ++)
-      add += parseInt(cpf.charAt(i)) * (10 - i);
-  var rev = 11 - (add % 11);
-  if (rev == 10 || rev == 11)
-      rev = 0;
-  if (rev != parseInt(cpf.charAt(9)))
-      return false;
-  // Valida 2o digito
-  add = 0;
-  for (var i = 0; i < 10; i ++)
-      add += parseInt(cpf.charAt(i)) * (11 - i);
-  rev = 11 - (add % 11);
-  if (rev == 10 || rev == 11)
-      rev = 0;
-  if (rev != parseInt(cpf.charAt(10)))
-      return false;
-  return true;
-}
+import ErrorMessage from '../components/ErrorMenssage';
+import validarCPF from '../validation/ValidationCpf';
 
 let erroTimeoutId;
 
 const Formulario = () => {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const [nome, setNome] = useState();
   const [nascimento, setNascimento] = useState();
   const [celular, setCelular] = useState();
@@ -83,10 +43,9 @@ const Formulario = () => {
       observacao,
     }
 
-    console.log(funcionario);
-    await blogFetch.post("/funcionario",{
-      body: funcionario,
-    })
+    await blogFetch.post("/funcionario", funcionario);
+    console.log(response);
+    navigate("/")
   };
 
   function mostrarErro(mensagem){
