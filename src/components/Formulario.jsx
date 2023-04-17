@@ -1,9 +1,10 @@
 import React from 'react';
 import "./Formulario.css";
 import { useState } from 'react';
-import { Navigate, useNavigate, useParams } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import blogFetch from '../axios/config';
-import ErrorMessage from '../components/ErrorMenssage';
+import axios from 'axios';
+import ErrorMessage from './ErrorMenssage';
 
 const validarCPF = (cpf) => {
   cpf = cpf.replace(/[^\d]+/g,'');
@@ -47,7 +48,7 @@ const validarCPF = (cpf) => {
 
 let erroTimeoutId;
 
-const FormularioEdicao = () => {
+const Formulario = () => {
   // const navigate = useNavigate();
   const [nome, setNome] = useState();
   const [nascimento, setNascimento] = useState();
@@ -57,21 +58,12 @@ const FormularioEdicao = () => {
   const [endereco, setEndereco] = useState();
   const [observacao, setObservacao] = useState();
 
-  var funcionarioAtual = {}
-  const buscarFuncionario = async()=>{
-    var id = useParams().id;
-    const {data} = await blogFetch.get(`/funcionario/${id}`);
-    funcionarioAtual = data;
-    console.log(funcionarioAtual);
-    console.log(funcionarioAtual.nome);
-  }
-  buscarFuncionario();
-
   const [erro, setErro] = useState({
     visivel: false,
     mensagem: ""
   });
-  const updateFuncionario = async(e)=>{
+
+  const createFuncionario = async(e)=>{
     e.preventDefault();
     const cpfIsValid = validarCPF(cpf || "");
     
@@ -90,12 +82,11 @@ const FormularioEdicao = () => {
       endereco,
       observacao,
     }
-  
+
     console.log(funcionario);
-    const response = await blogFetch.put(`/funcionario/${FuncionarioId}`,{
+    await blogFetch.post("/funcionario",{
       body: funcionario,
     })
-    console.log(response);
   };
 
   function mostrarErro(mensagem){
@@ -128,8 +119,9 @@ const FormularioEdicao = () => {
   }
 
   return <div className="cadastro-funcionario">
-    <form onSubmit={(e)=>{updateFuncionario(e)}}>
-      <h2>Atualização de funcionario</h2>
+    <form onSubmit={(e)=>{createFuncionario(e)}}>
+      <h2>Formulario de funcionarios</h2>
+
       {
         erro.visivel && (
           <ErrorMessage message={erro.mensagem} aoClicarEmFechar={esconderErro} />
@@ -142,7 +134,7 @@ const FormularioEdicao = () => {
         name='nome'
         type="text"
         id='nome'
-        value={(e)=>{funcionarioAtual.nome}}
+        placeholder='Digite seu nome'
         onChange={(e)=>{ setNome(e.target.value)}}>
         </input>
 
@@ -204,4 +196,4 @@ const FormularioEdicao = () => {
   </div>
 }
 
-export default FormularioEdicao
+export default Formulario
