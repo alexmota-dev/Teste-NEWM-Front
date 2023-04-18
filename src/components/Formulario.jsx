@@ -1,54 +1,16 @@
 import React from 'react';
-import "./Formulario.css";
+import "../css/Formulario.css";
 import { useState } from 'react';
-import { Navigate, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import blogFetch from '../axios/config';
 import ErrorMessage from '../components/ErrorMenssage';
-
-const validarCPF = (cpf) => {
-  cpf = cpf.replace(/[^\d]+/g,'');
-
-  if(cpf == '') return false;
-
-  // Elimina CPFs invalidos conhecidos
-  if (cpf.length != 11 || 
-      cpf == "00000000000" || 
-      cpf == "11111111111" || 
-      cpf == "22222222222" || 
-      cpf == "33333333333" || 
-      cpf == "44444444444" || 
-      cpf == "55555555555" || 
-      cpf == "66666666666" || 
-      cpf == "77777777777" || 
-      cpf == "88888888888" || 
-      cpf == "99999999999")
-          return false;
-
-  // Valida 1° digito
-  var add = 0;
-  for (var i=0; i < 9; i ++)
-      add += parseInt(cpf.charAt(i)) * (10 - i);
-  var rev = 11 - (add % 11);
-  if (rev == 10 || rev == 11)
-      rev = 0;
-  if (rev != parseInt(cpf.charAt(9)))
-      return false;
-  // Valida 2o digito
-  add = 0;
-  for (var i = 0; i < 10; i ++)
-      add += parseInt(cpf.charAt(i)) * (11 - i);
-  rev = 11 - (add % 11);
-  if (rev == 10 || rev == 11)
-      rev = 0;
-  if (rev != parseInt(cpf.charAt(10)))
-      return false;
-  return true;
-}
+import validarCPF from '../validation/ValidationCpf.js';
+import formatarCPF from '../validation/FormatarCpf';
 
 let erroTimeoutId;
 
-const FormularioEdicao = () => {
-  // const navigate = useNavigate();
+const Formulario = () => {
+  const navigate = useNavigate();
   const [nome, setNome] = useState();
   const [nascimento, setNascimento] = useState();
   const [celular, setCelular] = useState();
@@ -57,22 +19,14 @@ const FormularioEdicao = () => {
   const [endereco, setEndereco] = useState();
   const [observacao, setObservacao] = useState();
 
-  var funcionarioAtual = {}
-  const buscarFuncionario = async()=>{
-    var id = useParams().id;
-    const {data} = await blogFetch.get(`/funcionario/${id}`);
-    funcionarioAtual = data;
-    console.log(funcionarioAtual);
-    console.log(funcionarioAtual.nome);
-  }
-  buscarFuncionario();
-
   const [erro, setErro] = useState({
     visivel: false,
     mensagem: ""
   });
-  const updateFuncionario = async(e)=>{
+
+  const createFuncionario = async(e)=>{
     e.preventDefault();
+    setCpf(formatarCPF(cpf));
     const cpfIsValid = validarCPF(cpf || "");
     
     if(!cpfIsValid){
@@ -90,12 +44,9 @@ const FormularioEdicao = () => {
       endereco,
       observacao,
     }
-  
-    console.log(funcionario);
-    const response = await blogFetch.put(`/funcionario/${FuncionarioId}`,{
-      body: funcionario,
-    })
-    console.log(response);
+
+    await blogFetch.post("/funcionario", funcionario);
+    navigate("/");
   };
 
   function mostrarErro(mensagem){
@@ -128,8 +79,9 @@ const FormularioEdicao = () => {
   }
 
   return <div className="cadastro-funcionario">
-    <form onSubmit={(e)=>{updateFuncionario(e)}}>
-      <h2>Atualização de funcionario</h2>
+    <form onSubmit={(e)=>{createFuncionario(e)}}>
+      <h2>Formulario de funcionários</h2>
+
       {
         erro.visivel && (
           <ErrorMessage message={erro.mensagem} aoClicarEmFechar={esconderErro} />
@@ -142,7 +94,7 @@ const FormularioEdicao = () => {
         name='nome'
         type="text"
         id='nome'
-        value={(e)=>{funcionarioAtual.nome}}
+        placeholder='Digite seu nome'
         onChange={(e)=>{ setNome(e.target.value)}}>
         </input>
 
@@ -204,4 +156,4 @@ const FormularioEdicao = () => {
   </div>
 }
 
-export default FormularioEdicao
+export default Formulario
