@@ -103,7 +103,7 @@ const FormularioUpdate = () => {
   return (
     <div>
         <form onSubmit={(e)=>{updateFuncionario(e)}}>
-            <h2>Atualização de funcionario</h2>
+            <h2>Atualização de funcionário</h2>
             {
                 erro.visivel && (
                   <ErrorMessage message={erro.mensagem} aoClicarEmFechar={esconderErro} />

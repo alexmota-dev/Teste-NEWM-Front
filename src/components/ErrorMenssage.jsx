@@ -1,5 +1,5 @@
 import React from 'react';
-import "./ErrorMessage.css";
+import "../css/ErrorMessage.css";
 
 const ErrorMessage = ({ message, aoClicarEmFechar }) => {
     return (

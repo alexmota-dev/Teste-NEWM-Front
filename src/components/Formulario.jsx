@@ -4,7 +4,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import blogFetch from '../axios/config';
 import ErrorMessage from '../components/ErrorMenssage';
-import validarCPF from '../validation/ValidationCpf';
+import validarCPF from '../validation/ValidationCpf.js';
+import formatarCPF from '../validation/FormatarCpf';
 
 let erroTimeoutId;
 
@@ -25,6 +26,7 @@ const Formulario = () => {
 
   const createFuncionario = async(e)=>{
     e.preventDefault();
+    setCpf(formatarCPF(cpf));
     const cpfIsValid = validarCPF(cpf || "");
     
     if(!cpfIsValid){
@@ -44,8 +46,7 @@ const Formulario = () => {
     }
 
     await blogFetch.post("/funcionario", funcionario);
-    console.log(response);
-    navigate("/")
+    navigate("/");
   };
 
   function mostrarErro(mensagem){
@@ -79,7 +80,7 @@ const Formulario = () => {
 
   return <div className="cadastro-funcionario">
     <form onSubmit={(e)=>{createFuncionario(e)}}>
-      <h2>Formulario de funcionarios</h2>
+      <h2>Formulario de funcionários</h2>
 
       {
         erro.visivel && (

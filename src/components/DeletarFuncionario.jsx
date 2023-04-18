@@ -20,7 +20,7 @@ const DeletarFuncionario = () => {
       <div>
           <div className="content">
               <p>
-                  Essa ação removera o funcionario permanentemente, tem certeza que deseja continuar ?
+                  Essa ação removera o funcionário permanentemente, tem certeza que deseja continuar ?
               </p>
               <button
               onClick={()=>
@@ -31,7 +31,6 @@ const DeletarFuncionario = () => {
               SIM
               </button>
           </div>
-          DeletarFuncionario
       </div>
     )
   }

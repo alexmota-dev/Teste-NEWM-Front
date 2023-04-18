@@ -1,11 +1,11 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import "./NavBar.css";
+import "../css/NavBar.css";
 const NavBar = () => {
   return (
     <nav className="navbar">
         <h2>
-            <Link to={`/`}>Teste-Newm</Link>
+            <Link to={`/`}>CRUD-Funcionários</Link>
         </h2>
         <ul>
             <li>
@@ -13,7 +13,7 @@ const NavBar = () => {
             </li>
             <li>
                 <Link to={`/cadastro-funcionario`} className="new-btn">
-                    Criar Funcionario
+                    Criar Funcionário
                 </Link>
             </li>
         </ul>
