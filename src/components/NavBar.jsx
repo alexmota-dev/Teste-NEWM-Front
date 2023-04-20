@@ -5,7 +5,7 @@ const NavBar = () => {
   return (
     <nav className="navbar">
         <h2>
-            <Link to={`/`}>CRUD-Funcionários</Link>
+            <Link to={`/`}>CRUD-Funcionários-Teste de Modificação Deploy</Link>
         </h2>
         <ul>
             <li>
