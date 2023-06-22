@@ -17,27 +17,29 @@ const DeletarFuncionario = () => {
     }
   
     return (
-      <div>
-          <div className="content">
+      <div className='content'>
+          <div className="content-page-delete">
               <p>
                   Essa ação removera o funcionário permanentemente, tem certeza que deseja continuar ?
               </p>
-              <button
-                onClick={()=>
-                {
-                    destroy();
-                }}
-                className='btn-delete'>
-                Sim
-              </button>
-              <button
-                className='btn'
-                onClick={()=>
-                {
-                  navigate("/");
-                }}>
-                Voltar
-              </button>
+              <div className="buttons">
+                <button
+                  onClick={()=>
+                  {
+                      destroy();
+                  }}
+                  className='btn-delete'>
+                  Sim
+                </button>
+                <button
+                  className='btn'
+                  onClick={()=>
+                  {
+                    navigate("/");
+                  }}>
+                  Voltar
+                </button>
+              </div>
           </div>
       </div>
     )
