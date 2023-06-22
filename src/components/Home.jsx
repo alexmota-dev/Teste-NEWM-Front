@@ -29,13 +29,13 @@ const Home = () => {
       ) : (
         funcionarios.map((funcionario) => (
           <div className="post" key={funcionario.id}>
-            <h2>{funcionario.nome}</h2>
-            <p>{funcionario.nascimento}</p>
-            <p>{funcionario.celular}</p>
+            <h2>{funcionario.name}</h2>
+            <p>{funcionario.birth}</p>
+            <p>{funcionario.phone}</p>
             <p>{funcionario.cpf}</p>
             <p>{funcionario.email}</p>
-            <p>{funcionario.endereco}</p>
-            <p>{funcionario.observacao}</p>
+            <p>{funcionario.address}</p>
+            <p>{funcionario.observation}</p>
             <p>{funcionario.id}</p>
             <div className="buttons">
               <Link to={`/funcionario/${funcionario.id}`} className='btn'>
