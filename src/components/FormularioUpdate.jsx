@@ -24,9 +24,9 @@ const FormularioUpdate = () => {
     });
 
     const {id} = useParams();
-    const getFuncionarios =  async()=>{
+    const getClients =  async()=>{
         try {
-          const response = await blogFetch.get(`/funcionario/${id}`);
+          const response = await blogFetch.get(`/client/${id}`);
           console.log("response");
           console.log(response);
           const data = response.data;
@@ -44,10 +44,10 @@ const FormularioUpdate = () => {
         }
     }
     useEffect(()=>{
-        getFuncionarios();
+        getClients();
     }, [])  
 
-    const updateFuncionario = async(e)=>{
+    const updateClient = async(e)=>{
         e.preventDefault();
         const cpfIsValid = validarCPF(cpf || "");
         
@@ -60,7 +60,7 @@ const FormularioUpdate = () => {
           setCpf(FormatCPF(cpf));
         }
     
-        const funcionario = {
+        const client = {
           name,
           birth,
           phone,
@@ -71,7 +71,7 @@ const FormularioUpdate = () => {
         }
 
         try {
-          await blogFetch.put(`/funcionario/${id}`, funcionario)
+          await blogFetch.put(`/client/${id}`, client)
         } catch (error) {
           console.log("erro no put axios");
           console.log(error);
@@ -110,7 +110,7 @@ const FormularioUpdate = () => {
 
   return (
     <div>
-        <form onSubmit={(e)=>{updateFuncionario(e)}}>
+        <form onSubmit={(e)=>{updateClient(e)}}>
             <h2>Atualização de funcionário</h2>
             {
                 erro.visivel && (

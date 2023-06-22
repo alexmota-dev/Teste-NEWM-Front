@@ -25,7 +25,7 @@ const Formulario = () => {
     mensagem: ""
   });
 
-  const createFuncionario = async(e)=>{
+  const createClient = async(e)=>{
     e.preventDefault();
     if(name == "" || birth == "" || phone == "" || cpf == "" || email == "" || address == ""){
       showError("O único campo que pode ser vazio é o de observação !");
@@ -49,7 +49,7 @@ const Formulario = () => {
     setCpf(formatarCPF(cpf));
 
 
-    const funcionario = {
+    const client = {
       name,
       birth,
       phone,
@@ -59,7 +59,7 @@ const Formulario = () => {
       observation,
     }
     try{
-      await blogFetch.post("/funcionario", funcionario);
+      await blogFetch.post("/client", client);
     }
     catch(error){
       console.log(error);
@@ -96,8 +96,8 @@ const Formulario = () => {
     clearTimeout(erroTimeoutId);
   }
 
-  return <div className="cadastro-funcionario">
-    <form onSubmit={(e)=>{createFuncionario(e)}}>
+  return <div className="cadastro-client">
+    <form onSubmit={(e)=>{createClient(e)}}>
       <h2>Formulario de funcionários</h2>
 
       {

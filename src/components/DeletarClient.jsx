@@ -3,13 +3,13 @@ import { useNavigate, useParams } from 'react-router-dom';
 // import { useState } from 'react';
 import blogFetch from '../axios/config';
 
-const DeletarFuncionario = () => {
+const DeletarClient = () => {
     const navigate = useNavigate();
     const {id} = useParams();
     
     const destroy = async()=>{
       try {
-        await blogFetch.delete(`/funcionario/${id}`);
+        await blogFetch.delete(`/client/${id}`);
       } catch (error) {
         console.log(error);
       }
@@ -45,4 +45,4 @@ const DeletarFuncionario = () => {
     )
   }
   
-  export default DeletarFuncionario
+  export default DeletarClient;

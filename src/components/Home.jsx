@@ -5,43 +5,43 @@ import { Link } from 'react-router-dom';
 import "../css/Home.css";
 
 const Home = () => {
-  const [funcionarios, setFuncionarios] = useState([])
+  const [client, setclient] = useState([])
 
-  const getFuncionarios = async()=>{
+  const getclient = async()=>{
     try {
-      const response = await blogFetch.get("/funcionario");
+      const response = await blogFetch.get("/client");
       const data = response.data;
-      setFuncionarios(data);
+      setclient(data);
     } catch (error) {
       console.log(error)
     }
   }
 
   useEffect(()=>{
-    getFuncionarios();
+    getclient();
   }, [])
   
   return (
     <div className='home'>
-      <h1>Lista de Funcionarios</h1>
-      {funcionarios.length === 0 ? (
+      <h1>Lista de Client</h1>
+      {client.length === 0 ? (
         <p>Carregando...</p>
       ) : (
-        funcionarios.map((funcionario) => (
-          <div className="post" key={funcionario.id}>
-            <h2>{funcionario.name}</h2>
-            <p>{funcionario.birth}</p>
-            <p>{funcionario.phone}</p>
-            <p>{funcionario.cpf}</p>
-            <p>{funcionario.email}</p>
-            <p>{funcionario.address}</p>
-            <p>{funcionario.observation}</p>
-            <p>{funcionario.id}</p>
+        client.map((client) => (
+          <div className="post" key={client.id}>
+            <h2>{client.name}</h2>
+            <p>{client.birth}</p>
+            <p>{client.phone}</p>
+            <p>{client.cpf}</p>
+            <p>{client.email}</p>
+            <p>{client.address}</p>
+            <p>{client.observation}</p>
+            <p>{client.id}</p>
             <div className="buttons">
-              <Link to={`/funcionario/${funcionario.id}`} className='btn'>
-                Editar Funcionario
+              <Link to={`/client/${client.id}`} className='btn'>
+                Editar client
               </Link>
-              <Link to={`/funcionario-delete/${funcionario.id}`} className='btn-delete'>
+              <Link to={`/client-delete/${client.id}`} className='btn-delete'>
                 Deletar
               </Link>
             </div>

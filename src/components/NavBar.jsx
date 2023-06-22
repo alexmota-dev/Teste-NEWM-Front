@@ -12,7 +12,7 @@ const NavBar = () => {
                 <Link to={`/`}>Home</Link>
             </li>
             <li>
-                <Link to={`/cadastro-funcionario`} className="new-btn">
+                <Link to={`/cadastro-client`} className="new-btn">
                     Criar Funcionário
                 </Link>
             </li>

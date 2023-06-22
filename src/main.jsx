@@ -6,7 +6,7 @@ import './index.css'
 import Home from './components/Home'
 import Formulario from './components/Formulario'
 import FormularioUpdate from './components/FormularioUpdate'
-import DeletarFuncionario from './components/DeletarFuncionario'
+import DeletarFuncionario from './components/DeletarClient'
 
 const router= createBrowserRouter([
   {
@@ -17,15 +17,15 @@ const router= createBrowserRouter([
       element: <Home></Home>
     },
     {
-      path: "/cadastro-funcionario",
+      path: "/cadastro-client",
       element: <Formulario></Formulario>
     },
     {
-      path: `/funcionario/:id`,
+      path: `/client/:id`,
       element: <FormularioUpdate/>
     },
     {
-      path:`/funcionario-delete/:id`,
+      path:`/client-delete/:id`,
       element: <DeletarFuncionario/>
     }
   ],
