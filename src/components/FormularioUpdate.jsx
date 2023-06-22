@@ -4,18 +4,19 @@ import { useNavigate, useParams } from 'react-router-dom'
 import blogFetch from '../axios/config'
 import validarCPF from '../validation/ValidationCpf'
 import ErrorMessage from './ErrorMenssage'
+import FormatCPF from '../validation/FormatarCpf'
 
 let erroTimeoutId;
 
 const FormularioUpdate = () => {
     const navigate = useNavigate();
-    const [nome, setNome] = useState();
-    const [nascimento, setNascimento] = useState();
-    const [celular, setCelular] = useState();
+    const [name, setName] = useState();
+    const [birth, setBirth] = useState();
+    const [phone, setPhone] = useState();
     const [cpf, setCpf] = useState();
     const [email, setEmail] = useState();
-    const [endereco, setEndereco] = useState();
-    const [observacao, setObservacao] = useState();
+    const [address, setAddress] = useState();
+    const [observation, setObservation] = useState();
     
     const [erro, setErro] = useState({
         visivel: false,
@@ -23,18 +24,21 @@ const FormularioUpdate = () => {
     });
 
     const {id} = useParams();
-    
     const getFuncionarios =  async()=>{
         try {
           const response = await blogFetch.get(`/funcionario/${id}`);
+          console.log("response");
+          console.log(response);
           const data = response.data;
-          setNome(data.nome);
-          setNascimento(data.nascimento);
-          setCelular(data.celular);
+          console.log("data");
+          console.log(data);
+          setName(data.name);
+          setBirth(data.birth);
+          setPhone(data.phone);
           setCpf(data.cpf);
           setEmail(data.email);
-          setEndereco(data.endereco);
-          setObservacao(data.observacao);
+          setAddress(data.address);
+          setObservation(data.observation);
         } catch (error) {
           console.log(error)
         }
@@ -52,20 +56,24 @@ const FormularioUpdate = () => {
           esconderErroAposTempo(3);
           return;
         }
+        else{
+          setCpf(FormatCPF(cpf));
+        }
     
         const funcionario = {
-          nome,
-          nascimento,
-          celular,
+          name,
+          birth,
+          phone,
           cpf,
           email,
-          endereco,
-          observacao,
+          address,
+          observation,
         }
 
         try {
           await blogFetch.put(`/funcionario/${id}`, funcionario)
         } catch (error) {
+          console.log("erro no put axios");
           console.log(error);
         }
         navigate("/");
@@ -116,8 +124,8 @@ const FormularioUpdate = () => {
                 name='nome'
                 type="text"
                 id='nome'
-                value={nome}
-                onChange={(e)=>{ setNome(e.target.value)}}>
+                value={name}
+                onChange={(e)=>{ setName(e.target.value)}}>
                 </input>
 
                 <label htmlFor="title">Nascimento</label>
@@ -125,8 +133,8 @@ const FormularioUpdate = () => {
                 name='data'
                 type="date"
                 id='data'
-                value={nascimento}
-                onChange={(e)=>{ setNascimento(e.target.value)}}>
+                value={birth}
+                onChange={(e)=>{ setBirth(e.target.value)}}>
                 </input>
 
                 <label htmlFor="title">Celular</label>
@@ -134,8 +142,8 @@ const FormularioUpdate = () => {
                 name='celular'
                 type="text"
                 id='celular'
-                value={celular}
-                onChange={(e)=>{ setCelular(e.target.value)}}>
+                value={phone}
+                onChange={(e)=>{ setPhone(e.target.value)}}>
                 </input>
 
                 <label htmlFor="title">CPF</label>
@@ -161,17 +169,17 @@ const FormularioUpdate = () => {
                 name='endereco'
                 type="text"
                 id='endereco'
-                value={endereco}
-                onChange={(e)=>{ setEndereco(e.target.value)}}>
+                value={address}
+                onChange={(e)=>{ setAddress(e.target.value)}}>
                 </input>
 
                 <label htmlFor="text">Observação</label>
                 <textarea
                 name="observacao"
                 id="observacao"
-                value={observacao}
+                value={observation}
                 cols="100" rows="5"
-                onChange={(e)=>{ setObservacao(e.target.value)}}>
+                onChange={(e)=>{ setObservation(e.target.value)}}>
                 </textarea>
                 <input
                 className="btn"
