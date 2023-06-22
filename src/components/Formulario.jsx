@@ -6,18 +6,19 @@ import blogFetch from '../axios/config';
 import ErrorMessage from '../components/ErrorMenssage';
 import validarCPF from '../validation/ValidationCpf.js';
 import formatarCPF from '../validation/FormatarCpf';
+import verifyName from '../validation/FormatName';
 
 let erroTimeoutId;
 
 const Formulario = () => {
   const navigate = useNavigate();
-  const [name, setName] = useState();
-  const [birth, setBirth] = useState();
-  const [phone, setPhone] = useState();
-  const [cpf, setCpf] = useState();
-  const [email, setEmail] = useState();
-  const [address, setAddress] = useState();
-  const [observation, setObservation] = useState();
+  const [name, setName] = useState("");
+  const [birth, setBirth] = useState("");
+  const [phone, setPhone] = useState("");
+  const [cpf, setCpf] = useState("");
+  const [email, setEmail] = useState("");
+  const [address, setAddress] = useState("");
+  const [observation, setObservation] = useState("");
 
   const [erro, setErro] = useState({
     visivel: false,
@@ -26,14 +27,27 @@ const Formulario = () => {
 
   const createFuncionario = async(e)=>{
     e.preventDefault();
-    setCpf(formatarCPF(cpf));
-    const cpfIsValid = validarCPF(cpf || "");
-    
-    if(!cpfIsValid){
-      mostrarErro("Cpf Inválido");
-      esconderErroAposTempo(3);
+    if(name == "" || birth == "" || phone == "" || cpf == "" || email == "" || address == ""){
+      showError("O único campo que pode ser vazio é o de observação !");
+      hideErrorAfterTime(4);
       return;
     }
+
+    const cpfIsValid = validarCPF(cpf || "");
+    if(!cpfIsValid){
+      showError("CPF Inválido !");
+      hideErrorAfterTime(3);
+      return;
+    }
+
+    const nameIsValid = verifyName(name || "");
+    if(!nameIsValid){
+      showError("Nome Inválido !");
+      hideErrorAfterTime(3);
+      return;
+    }
+    setCpf(formatarCPF(cpf));
+
 
     const funcionario = {
       name,
@@ -53,7 +67,7 @@ const Formulario = () => {
     navigate("/");
   };
 
-  function mostrarErro(mensagem){
+  function showError(mensagem){
     cancelarOmissaoDeErroAposTempo();
 
     setErro({
@@ -62,7 +76,7 @@ const Formulario = () => {
     });
   }
 
-  function esconderErroAposTempo(tempoEmSegundos){
+  function hideErrorAfterTime(tempoEmSegundos){
     const tempoEmMillesgundos = tempoEmSegundos * 1000;
     setTimeout(() => {
       esconderErro();
@@ -88,7 +102,7 @@ const Formulario = () => {
 
       {
         erro.visivel && (
-          <ErrorMessage message={erro.mensagem} aoClicarEmFechar={esconderErro} />
+          <ErrorMessage message={erro.mensagem} whenYouClickClose={esconderErro} />
         )
       }
 
