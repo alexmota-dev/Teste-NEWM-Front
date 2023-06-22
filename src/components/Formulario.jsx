@@ -11,13 +11,13 @@ let erroTimeoutId;
 
 const Formulario = () => {
   const navigate = useNavigate();
-  const [nome, setNome] = useState();
-  const [nascimento, setNascimento] = useState();
-  const [celular, setCelular] = useState();
+  const [name, setName] = useState();
+  const [birth, setBirth] = useState();
+  const [phone, setPhone] = useState();
   const [cpf, setCpf] = useState();
   const [email, setEmail] = useState();
-  const [endereco, setEndereco] = useState();
-  const [observacao, setObservacao] = useState();
+  const [address, setAddress] = useState();
+  const [observation, setObservation] = useState();
 
   const [erro, setErro] = useState({
     visivel: false,
@@ -36,16 +36,20 @@ const Formulario = () => {
     }
 
     const funcionario = {
-      nome,
-      nascimento,
-      celular,
+      name,
+      birth,
+      phone,
       cpf,
       email,
-      endereco,
-      observacao,
+      address,
+      observation,
     }
-
-    await blogFetch.post("/funcionario", funcionario);
+    try{
+      await blogFetch.post("/funcionario", funcionario);
+    }
+    catch(error){
+      console.log(error);
+    }
     navigate("/");
   };
 
@@ -91,11 +95,11 @@ const Formulario = () => {
       <div className="form-control">
         <label htmlFor="title">Nome</label>
         <input
-        name='nome'
+        name='name'
         type="text"
-        id='nome'
+        id='name'
         placeholder='Digite seu nome'
-        onChange={(e)=>{ setNome(e.target.value)}}>
+        onChange={(e)=>{ setName(e.target.value)}}>
         </input>
 
         <label htmlFor="title">Nascimento</label>
@@ -103,7 +107,7 @@ const Formulario = () => {
         name='data'
         type="date"
         id='data'
-        onChange={(e)=>{ setNascimento(e.target.value)}}>
+        onChange={(e)=>{ setBirth(e.target.value)}}>
         </input>
 
         <label htmlFor="title">Celular</label>
@@ -112,7 +116,7 @@ const Formulario = () => {
         type="text"
         id='celular'
         placeholder='Insira seu numero de celular'
-        onChange={(e)=>{ setCelular(e.target.value)}}>
+        onChange={(e)=>{ setPhone(e.target.value)}}>
         </input>
 
         <label htmlFor="title">CPF</label>
@@ -139,7 +143,7 @@ const Formulario = () => {
         type="text"
         id='endereco'
         placeholder='Insira seu endereco'
-        onChange={(e)=>{ setEndereco(e.target.value)}}>
+        onChange={(e)=>{ setAddress(e.target.value)}}>
         </input>
 
         <label htmlFor="text">Observação</label>
@@ -148,7 +152,7 @@ const Formulario = () => {
         id="observacao"
         placeholder='Digite a observação'
         cols="100" rows="5"
-        onChange={(e)=>{ setObservacao(e.target.value)}}>
+        onChange={(e)=>{ setObservation(e.target.value)}}>
         </textarea>
         <input className="btn" type="submit" value="Criar" />
       </div>
