@@ -31,6 +31,7 @@
     transition: 0.3s;
 }
 .btn-delete{
+    display: flex;
     background-color: rgb(225, 36, 7);
     color: #0e1217;
     border: 1px solid #fff;
@@ -39,6 +40,7 @@
     border-radius: 1rem;
     max-width: 100px;
     text-align: center;
+    align-items: center;
     cursor: pointer;
     transition: 0.3s;
 }
