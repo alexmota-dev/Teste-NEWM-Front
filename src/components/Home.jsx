@@ -1,22 +1,33 @@
 import { useState, useEffect } from 'react'
 import React from 'react'
 import blogFetch from '../axios/config';
-import { Link } from 'react-router-dom';
-import "../css/Home.css";
+import '../css/Home.css';
+import ClientsList from './ClientsList';
 
 const Home = () => {
-  const [client, setclient] = useState([])
+  const [clients, setclients] = useState([]);
+  const [searchValue, setSearchValue] = useState('');
+  const [filteredClients, setFilteredClients] = useState([]);
+
 
   const getclient = async()=>{
     try {
-      const response = await blogFetch.get("/client");
+      const response = await blogFetch.get('/client');
       const data = response.data;
-      setclient(data);
+      setclients(data);
     } catch (error) {
       console.log(error)
     }
   }
-
+  const searchClients = (e) => {
+    e.preventDefault();
+  
+    const filteredClients = clients.filter((client) =>
+      client.name.toLowerCase().includes(searchValue.toLowerCase())
+    );
+    setFilteredClients(filteredClients);
+  };
+  
   useEffect(()=>{
     getclient();
   }, [])
@@ -24,32 +35,27 @@ const Home = () => {
   return (
     <div className='home'>
       <h1>Lista de Client</h1>
-      {client.length === 0 ? (
-        <p>Carregando...</p>
-      ) : (
-        client.map((client) => (
-          <div className="post" key={client.id}>
-            <h2>{client.name}</h2>
-            <p>{client.birth}</p>
-            <p>{client.phone}</p>
-            <p>{client.cpf}</p>
-            <p>{client.email}</p>
-            <p>{client.address}</p>
-            <p>{client.observation}</p>
-            <p>{client.id}</p>
-            <div className="buttons">
-              <Link to={`/client/${client.id}`} className='btn'>
-                Editar client
-              </Link>
-              <Link to={`/client-delete/${client.id}`} className='btn-delete'>
-                Deletar
-              </Link>
-            </div>
-          </div>
-        ))
-      )}
+      <div>
+        <form className='searchBar' onSubmit={searchClients}>
+        <input
+          name="search"
+          className="searchInput"
+          value={searchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
+        />
+          <input className="btn" type="submit" value="Pesquisar" />
+        </form>
+      </div>
+      {filteredClients.length === 0 ? (
+        clients.length === 0 ? (
+          <h1>Ainda não existem clientes no banco, faça um primeiro cadastro <a href="/cadastro-client">aqui</a></h1>
+        ):(
+          <ClientsList clients={clients} />
+        )):(
+          <ClientsList clients={filteredClients} />
+        )}
     </div>
   )
 }
 
-export default Home
+export default Home;

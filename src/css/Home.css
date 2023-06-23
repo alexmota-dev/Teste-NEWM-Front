@@ -30,6 +30,19 @@
     cursor: pointer;
     transition: 0.3s;
 }
+.searchBar{
+    display: flex;
+    display: flex;
+    align-items: center;
+    width: 300px;
+    height: 75px;
+    max-width: 100%;
+}
+.searchInput{
+    width: 200px;
+    margin-right: 4%;
+    border-radius: 5px;
+}
 .btn-delete{
     display: flex;
     background-color: rgb(225, 36, 7);
