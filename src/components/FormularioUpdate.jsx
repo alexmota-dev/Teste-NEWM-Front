@@ -10,13 +10,13 @@ let erroTimeoutId;
 
 const FormularioUpdate = () => {
     const navigate = useNavigate();
-    const [name, setName] = useState();
-    const [birth, setBirth] = useState();
-    const [phone, setPhone] = useState();
-    const [cpf, setCpf] = useState();
-    const [email, setEmail] = useState();
-    const [address, setAddress] = useState();
-    const [observation, setObservation] = useState();
+    const [name, setName] = useState("");
+    const [birth, setBirth] = useState("");
+    const [phone, setPhone] = useState("");
+    const [cpf, setCpf] = useState("");
+    const [email, setEmail] = useState("");
+    const [address, setAddress] = useState("");
+    const [observation, setObservation] = useState("");
     
     const [erro, setErro] = useState({
         visivel: false,
@@ -26,12 +26,16 @@ const FormularioUpdate = () => {
     const {id} = useParams();
     const getClients =  async()=>{
         try {
-          const response = await blogFetch.get(`/client/${id}`);
-          console.log("response");
-          console.log(response);
+          var response = await blogFetch.get(`/client/${id}`);
+        } catch (error) {
+          console.log(error)
+        }
+        if(response.data.status >= 400){
+          showError(response.data.message);
+          console.log("O erro que voce viu na tela vem do backend :)");
+        }
+        else{
           const data = response.data;
-          console.log("data");
-          console.log(data);
           setName(data.name);
           setBirth(data.birth);
           setPhone(data.phone);
@@ -39,8 +43,6 @@ const FormularioUpdate = () => {
           setEmail(data.email);
           setAddress(data.address);
           setObservation(data.observation);
-        } catch (error) {
-          console.log(error)
         }
     }
     useEffect(()=>{
@@ -52,8 +54,7 @@ const FormularioUpdate = () => {
         const cpfIsValid = validarCPF(cpf || "");
         
         if(!cpfIsValid){
-          mostrarErro("Cpf Inválido");
-          esconderErroAposTempo(3);
+          showError("CPF Inválido");
           return;
         }
         else{
@@ -71,16 +72,23 @@ const FormularioUpdate = () => {
         }
 
         try {
-          await blogFetch.put(`/client/${id}`, client)
+          var response = await blogFetch.put(`/client/${id}`, client)
         } catch (error) {
           console.log("erro no put axios");
           console.log(error);
         }
-        navigate("/");
+        if(response.data.status >= 400){
+          showError(response.data.message);
+          hideErrorAfterTime(3);
+          console.log("O erro que voce viu na tela vem do backend :)");
+        }
+        else{
+          navigate("/");
+        }
     }
     
-  function mostrarErro(mensagem){
-    cancelarOmissaoDeErroAposTempo();
+  function showError(mensagem){
+    cancelErrorOmissionAfterTime();
 
     setErro({
       visivel: true,
@@ -88,15 +96,15 @@ const FormularioUpdate = () => {
     });
   }
 
-  function esconderErroAposTempo(tempoEmSegundos){
-    const tempoEmMillesgundos = tempoEmSegundos * 1000;
+  function hideErrorAfterTime(seconds){
+    const timeInMilliseconds = seconds * 1000;
     setTimeout(() => {
-      esconderErro();
-    }, tempoEmMillesgundos);
+      hideError();
+    }, timeInMilliseconds);
   }
 
-  function esconderErro(){
-    cancelarOmissaoDeErroAposTempo();
+  function hideError(){
+    cancelErrorOmissionAfterTime();
 
     setErro({
       visivel: false,
@@ -104,7 +112,7 @@ const FormularioUpdate = () => {
     });
   }
 
-  function cancelarOmissaoDeErroAposTempo(){
+  function cancelErrorOmissionAfterTime(){
     clearTimeout(erroTimeoutId);
   }
 
@@ -114,7 +122,7 @@ const FormularioUpdate = () => {
             <h2>Atualização de funcionário</h2>
             {
                 erro.visivel && (
-                  <ErrorMessage message={erro.mensagem} aoClicarEmFechar={esconderErro} />
+                  <ErrorMessage message={erro.mensagem} aoClicarEmFechar={hideError} />
                 )
             }
 

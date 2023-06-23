@@ -59,16 +59,23 @@ const Formulario = () => {
       observation,
     }
     try{
-      await blogFetch.post("/client", client);
+      var response = await blogFetch.post("/client", client);
     }
     catch(error){
       console.log(error);
     }
-    navigate("/");
+    if(response.data.status >= 400){
+      showError(response.data.message);
+      hideErrorAfterTime(3);
+      console.log("O erro que voce viu na tela vem do backend :)");
+    }
+    else{
+      navigate("/");
+    }
   };
 
   function showError(mensagem){
-    cancelarOmissaoDeErroAposTempo();
+    cancelErrorOmissionAfterTime();
 
     setErro({
       visivel: true,
@@ -77,14 +84,14 @@ const Formulario = () => {
   }
 
   function hideErrorAfterTime(tempoEmSegundos){
-    const tempoEmMillesgundos = tempoEmSegundos * 1000;
+    const timeInMilliseconds = tempoEmSegundos * 1000;
     setTimeout(() => {
-      esconderErro();
-    }, tempoEmMillesgundos);
+      hideError();
+    }, timeInMilliseconds);
   }
 
-  function esconderErro(){
-    cancelarOmissaoDeErroAposTempo();
+  function hideError(){
+    cancelErrorOmissionAfterTime();
 
     setErro({
       visivel: false,
@@ -92,17 +99,17 @@ const Formulario = () => {
     });
   }
 
-  function cancelarOmissaoDeErroAposTempo(){
+  function cancelErrorOmissionAfterTime(){
     clearTimeout(erroTimeoutId);
   }
 
   return <div className="cadastro-client">
     <form onSubmit={(e)=>{createClient(e)}}>
-      <h2>Formulario de funcionários</h2>
+      <h2>Formulario de Clientes</h2>
 
       {
         erro.visivel && (
-          <ErrorMessage message={erro.mensagem} whenYouClickClose={esconderErro} />
+          <ErrorMessage message={erro.mensagem} whenYouClickClose={hideError} />
         )
       }
 
