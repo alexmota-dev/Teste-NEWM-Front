@@ -1,11 +1,11 @@
 import React from 'react';
 import "../css/ErrorMessage.css";
 
-const ErrorMessage = ({ message, aoClicarEmFechar }) => {
+const ErrorMessage = ({ message, whenYouClickClose }) => {
     return (
         <div className='error-container'>
             <p>{message}</p>
-            <button onClick={aoClicarEmFechar}>X</button>
+            <button onClick={whenYouClickClose}>X</button>
         </div>
     );
 }

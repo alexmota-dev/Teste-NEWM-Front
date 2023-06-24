@@ -1,55 +1,61 @@
 import { useState, useEffect } from 'react'
 import React from 'react'
 import blogFetch from '../axios/config';
-import { Link } from 'react-router-dom';
-import "../css/Home.css";
+import '../css/Home.css';
+import ClientsList from './ClientsList';
 
 const Home = () => {
-  const [funcionarios, setFuncionarios] = useState([])
+  const [clients, setclients] = useState([]);
+  const [searchValue, setSearchValue] = useState('');
+  const [filteredClients, setFilteredClients] = useState([]);
 
-  const getFuncionarios = async()=>{
+
+  const getclient = async()=>{
     try {
-      const response = await blogFetch.get("/funcionario");
+      const response = await blogFetch.get('/client');
       const data = response.data;
-      setFuncionarios(data);
+      setclients(data);
     } catch (error) {
       console.log(error)
     }
   }
-
+  const searchClients = (e) => {
+    e.preventDefault();
+  
+    const filteredClients = clients.filter((client) =>
+      client.name.toLowerCase().includes(searchValue.toLowerCase())
+    );
+    setFilteredClients(filteredClients);
+  };
+  
   useEffect(()=>{
-    getFuncionarios();
+    getclient();
   }, [])
   
   return (
     <div className='home'>
-      <h1>Lista de Funcionarios</h1>
-      {funcionarios.length === 0 ? (
-        <p>Carregando...</p>
-      ) : (
-        funcionarios.map((funcionario) => (
-          <div className="post" key={funcionario.id}>
-            <h2>{funcionario.nome}</h2>
-            <p>{funcionario.nascimento}</p>
-            <p>{funcionario.celular}</p>
-            <p>{funcionario.cpf}</p>
-            <p>{funcionario.email}</p>
-            <p>{funcionario.endereco}</p>
-            <p>{funcionario.observacao}</p>
-            <p>{funcionario.id}</p>
-            <div className="buttons">
-              <Link to={`/funcionario/${funcionario.id}`} className='btn'>
-                Editar Funcionario
-              </Link>
-              <Link to={`/funcionario-delete/${funcionario.id}`} className='btn-delete'>
-                Deletar
-              </Link>
-            </div>
-          </div>
-        ))
-      )}
+      <h1>Lista de Client</h1>
+      <div>
+        <form className='searchBar' onSubmit={searchClients}>
+        <input
+          name="search"
+          className="searchInput"
+          value={searchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
+        />
+          <input className="btn" type="submit" value="Pesquisar" />
+        </form>
+      </div>
+      {filteredClients.length === 0 ? (
+        clients.length === 0 ? (
+          <h1>Ainda não existem clientes no banco, faça um primeiro cadastro <a href="/cadastro-client">aqui</a></h1>
+        ):(
+          <ClientsList clients={clients} />
+        )):(
+          <ClientsList clients={filteredClients} />
+        )}
     </div>
   )
 }
 
-export default Home
+export default Home;

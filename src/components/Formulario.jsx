@@ -6,51 +6,76 @@ import blogFetch from '../axios/config';
 import ErrorMessage from '../components/ErrorMenssage';
 import validarCPF from '../validation/ValidationCpf.js';
 import formatarCPF from '../validation/FormatarCpf';
+import verifyName from '../validation/FormatName';
 
 let erroTimeoutId;
 
 const Formulario = () => {
   const navigate = useNavigate();
-  const [nome, setNome] = useState();
-  const [nascimento, setNascimento] = useState();
-  const [celular, setCelular] = useState();
-  const [cpf, setCpf] = useState();
-  const [email, setEmail] = useState();
-  const [endereco, setEndereco] = useState();
-  const [observacao, setObservacao] = useState();
+  const [name, setName] = useState("");
+  const [birth, setBirth] = useState("");
+  const [phone, setPhone] = useState("");
+  const [cpf, setCpf] = useState("");
+  const [email, setEmail] = useState("");
+  const [address, setAddress] = useState("");
+  const [observation, setObservation] = useState("");
 
   const [erro, setErro] = useState({
     visivel: false,
     mensagem: ""
   });
 
-  const createFuncionario = async(e)=>{
+  const createClient = async(e)=>{
     e.preventDefault();
-    setCpf(formatarCPF(cpf));
-    const cpfIsValid = validarCPF(cpf || "");
-    
-    if(!cpfIsValid){
-      mostrarErro("Cpf Inválido");
-      esconderErroAposTempo(3);
+    if(name == "" || birth == "" || phone == "" || cpf == "" || email == "" || address == ""){
+      showError("O único campo que pode ser vazio é o de observação !");
+      hideErrorAfterTime(4);
       return;
     }
 
-    const funcionario = {
-      nome,
-      nascimento,
-      celular,
-      cpf,
-      email,
-      endereco,
-      observacao,
+    const cpfIsValid = validarCPF(cpf || "");
+    if(!cpfIsValid){
+      showError("CPF Inválido !");
+      hideErrorAfterTime(3);
+      return;
     }
 
-    await blogFetch.post("/funcionario", funcionario);
-    navigate("/");
+    const nameIsValid = verifyName(name || "");
+    if(!nameIsValid){
+      showError("Nome Inválido !");
+      hideErrorAfterTime(3);
+      return;
+    }
+    setCpf(formatarCPF(cpf));
+
+
+    const client = {
+      name,
+      birth,
+      phone,
+      cpf,
+      email,
+      address,
+      observation,
+    }
+    try{
+      var response = await blogFetch.post("/client", client);
+    }
+    catch(error){
+      console.log(error);
+    }
+    if(response.data.status >= 400){
+      showError(response.data.message);
+      hideErrorAfterTime(3);
+      console.log("O erro que voce viu na tela vem do backend :)");
+    }
+    else{
+      navigate("/");
+    }
   };
 
-  function mostrarErro(mensagem){
-    cancelarOmissaoDeErroAposTempo();
+  function showError(mensagem){
+    cancelErrorOmissionAfterTime();
 
     setErro({
       visivel: true,
@@ -58,15 +83,15 @@ const Formulario = () => {
     });
   }
 
-  function esconderErroAposTempo(tempoEmSegundos){
-    const tempoEmMillesgundos = tempoEmSegundos * 1000;
+  function hideErrorAfterTime(tempoEmSegundos){
+    const timeInMilliseconds = tempoEmSegundos * 1000;
     setTimeout(() => {
-      esconderErro();
-    }, tempoEmMillesgundos);
+      hideError();
+    }, timeInMilliseconds);
   }
 
-  function esconderErro(){
-    cancelarOmissaoDeErroAposTempo();
+  function hideError(){
+    cancelErrorOmissionAfterTime();
 
     setErro({
       visivel: false,
@@ -74,28 +99,28 @@ const Formulario = () => {
     });
   }
 
-  function cancelarOmissaoDeErroAposTempo(){
+  function cancelErrorOmissionAfterTime(){
     clearTimeout(erroTimeoutId);
   }
 
-  return <div className="cadastro-funcionario">
-    <form onSubmit={(e)=>{createFuncionario(e)}}>
-      <h2>Formulario de funcionários</h2>
+  return <div className="cadastro-client">
+    <form onSubmit={(e)=>{createClient(e)}}>
+      <h2>Formulario de Clientes</h2>
 
       {
         erro.visivel && (
-          <ErrorMessage message={erro.mensagem} aoClicarEmFechar={esconderErro} />
+          <ErrorMessage message={erro.mensagem} whenYouClickClose={hideError} />
         )
       }
 
       <div className="form-control">
         <label htmlFor="title">Nome</label>
         <input
-        name='nome'
+        name='name'
         type="text"
-        id='nome'
+        id='name'
         placeholder='Digite seu nome'
-        onChange={(e)=>{ setNome(e.target.value)}}>
+        onChange={(e)=>{ setName(e.target.value)}}>
         </input>
 
         <label htmlFor="title">Nascimento</label>
@@ -103,7 +128,7 @@ const Formulario = () => {
         name='data'
         type="date"
         id='data'
-        onChange={(e)=>{ setNascimento(e.target.value)}}>
+        onChange={(e)=>{ setBirth(e.target.value)}}>
         </input>
 
         <label htmlFor="title">Celular</label>
@@ -112,7 +137,7 @@ const Formulario = () => {
         type="text"
         id='celular'
         placeholder='Insira seu numero de celular'
-        onChange={(e)=>{ setCelular(e.target.value)}}>
+        onChange={(e)=>{ setPhone(e.target.value)}}>
         </input>
 
         <label htmlFor="title">CPF</label>
@@ -139,7 +164,7 @@ const Formulario = () => {
         type="text"
         id='endereco'
         placeholder='Insira seu endereco'
-        onChange={(e)=>{ setEndereco(e.target.value)}}>
+        onChange={(e)=>{ setAddress(e.target.value)}}>
         </input>
 
         <label htmlFor="text">Observação</label>
@@ -148,7 +173,7 @@ const Formulario = () => {
         id="observacao"
         placeholder='Digite a observação'
         cols="100" rows="5"
-        onChange={(e)=>{ setObservacao(e.target.value)}}>
+        onChange={(e)=>{ setObservation(e.target.value)}}>
         </textarea>
         <input className="btn" type="submit" value="Criar" />
       </div>

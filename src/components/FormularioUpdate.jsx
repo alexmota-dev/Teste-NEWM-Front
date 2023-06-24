@@ -4,18 +4,19 @@ import { useNavigate, useParams } from 'react-router-dom'
 import blogFetch from '../axios/config'
 import validarCPF from '../validation/ValidationCpf'
 import ErrorMessage from './ErrorMenssage'
+import FormatCPF from '../validation/FormatarCpf'
 
 let erroTimeoutId;
 
 const FormularioUpdate = () => {
     const navigate = useNavigate();
-    const [nome, setNome] = useState();
-    const [nascimento, setNascimento] = useState();
-    const [celular, setCelular] = useState();
-    const [cpf, setCpf] = useState();
-    const [email, setEmail] = useState();
-    const [endereco, setEndereco] = useState();
-    const [observacao, setObservacao] = useState();
+    const [name, setName] = useState("");
+    const [birth, setBirth] = useState("");
+    const [phone, setPhone] = useState("");
+    const [cpf, setCpf] = useState("");
+    const [email, setEmail] = useState("");
+    const [address, setAddress] = useState("");
+    const [observation, setObservation] = useState("");
     
     const [erro, setErro] = useState({
         visivel: false,
@@ -23,56 +24,71 @@ const FormularioUpdate = () => {
     });
 
     const {id} = useParams();
-    
-    const getFuncionarios =  async()=>{
+    const getClients =  async()=>{
         try {
-          const response = await blogFetch.get(`/funcionario/${id}`);
-          const data = response.data;
-          setNome(data.nome);
-          setNascimento(data.nascimento);
-          setCelular(data.celular);
-          setCpf(data.cpf);
-          setEmail(data.email);
-          setEndereco(data.endereco);
-          setObservacao(data.observacao);
+          var response = await blogFetch.get(`/client/${id}`);
         } catch (error) {
           console.log(error)
         }
+        if(response.data.status >= 400){
+          showError(response.data.message);
+          console.log("O erro que voce viu na tela vem do backend :)");
+        }
+        else{
+          const data = response.data;
+          setName(data.name);
+          setBirth(data.birth);
+          setPhone(data.phone);
+          setCpf(data.cpf);
+          setEmail(data.email);
+          setAddress(data.address);
+          setObservation(data.observation);
+        }
     }
     useEffect(()=>{
-        getFuncionarios();
+        getClients();
     }, [])  
 
-    const updateFuncionario = async(e)=>{
+    const updateClient = async(e)=>{
         e.preventDefault();
         const cpfIsValid = validarCPF(cpf || "");
         
         if(!cpfIsValid){
-          mostrarErro("Cpf Inválido");
-          esconderErroAposTempo(3);
+          showError("CPF Inválido");
           return;
         }
+        else{
+          setCpf(FormatCPF(cpf));
+        }
     
-        const funcionario = {
-          nome,
-          nascimento,
-          celular,
+        const client = {
+          name,
+          birth,
+          phone,
           cpf,
           email,
-          endereco,
-          observacao,
+          address,
+          observation,
         }
 
         try {
-          await blogFetch.put(`/funcionario/${id}`, funcionario)
+          var response = await blogFetch.put(`/client/${id}`, client)
         } catch (error) {
+          console.log("erro no put axios");
           console.log(error);
         }
-        navigate("/");
+        if(response.data.status >= 400){
+          showError(response.data.message);
+          hideErrorAfterTime(3);
+          console.log("O erro que voce viu na tela vem do backend :)");
+        }
+        else{
+          navigate("/");
+        }
     }
     
-  function mostrarErro(mensagem){
-    cancelarOmissaoDeErroAposTempo();
+  function showError(mensagem){
+    cancelErrorOmissionAfterTime();
 
     setErro({
       visivel: true,
@@ -80,15 +96,15 @@ const FormularioUpdate = () => {
     });
   }
 
-  function esconderErroAposTempo(tempoEmSegundos){
-    const tempoEmMillesgundos = tempoEmSegundos * 1000;
+  function hideErrorAfterTime(seconds){
+    const timeInMilliseconds = seconds * 1000;
     setTimeout(() => {
-      esconderErro();
-    }, tempoEmMillesgundos);
+      hideError();
+    }, timeInMilliseconds);
   }
 
-  function esconderErro(){
-    cancelarOmissaoDeErroAposTempo();
+  function hideError(){
+    cancelErrorOmissionAfterTime();
 
     setErro({
       visivel: false,
@@ -96,17 +112,17 @@ const FormularioUpdate = () => {
     });
   }
 
-  function cancelarOmissaoDeErroAposTempo(){
+  function cancelErrorOmissionAfterTime(){
     clearTimeout(erroTimeoutId);
   }
 
   return (
     <div>
-        <form onSubmit={(e)=>{updateFuncionario(e)}}>
+        <form onSubmit={(e)=>{updateClient(e)}}>
             <h2>Atualização de funcionário</h2>
             {
                 erro.visivel && (
-                  <ErrorMessage message={erro.mensagem} aoClicarEmFechar={esconderErro} />
+                  <ErrorMessage message={erro.mensagem} aoClicarEmFechar={hideError} />
                 )
             }
 
@@ -116,8 +132,8 @@ const FormularioUpdate = () => {
                 name='nome'
                 type="text"
                 id='nome'
-                value={nome}
-                onChange={(e)=>{ setNome(e.target.value)}}>
+                value={name}
+                onChange={(e)=>{ setName(e.target.value)}}>
                 </input>
 
                 <label htmlFor="title">Nascimento</label>
@@ -125,8 +141,8 @@ const FormularioUpdate = () => {
                 name='data'
                 type="date"
                 id='data'
-                value={nascimento}
-                onChange={(e)=>{ setNascimento(e.target.value)}}>
+                value={birth}
+                onChange={(e)=>{ setBirth(e.target.value)}}>
                 </input>
 
                 <label htmlFor="title">Celular</label>
@@ -134,8 +150,8 @@ const FormularioUpdate = () => {
                 name='celular'
                 type="text"
                 id='celular'
-                value={celular}
-                onChange={(e)=>{ setCelular(e.target.value)}}>
+                value={phone}
+                onChange={(e)=>{ setPhone(e.target.value)}}>
                 </input>
 
                 <label htmlFor="title">CPF</label>
@@ -161,17 +177,17 @@ const FormularioUpdate = () => {
                 name='endereco'
                 type="text"
                 id='endereco'
-                value={endereco}
-                onChange={(e)=>{ setEndereco(e.target.value)}}>
+                value={address}
+                onChange={(e)=>{ setAddress(e.target.value)}}>
                 </input>
 
                 <label htmlFor="text">Observação</label>
                 <textarea
                 name="observacao"
                 id="observacao"
-                value={observacao}
+                value={observation}
                 cols="100" rows="5"
-                onChange={(e)=>{ setObservacao(e.target.value)}}>
+                onChange={(e)=>{ setObservation(e.target.value)}}>
                 </textarea>
                 <input
                 className="btn"
